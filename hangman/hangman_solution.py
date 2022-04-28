@@ -45,7 +45,7 @@ class Hangman:
         # TODO 2: Print two message upon initialization:
         # 1. "The mistery word has {num_letters} characters"
         # 2. {word_guessed}
-        word_index = random.randint(0, len(word_list))
+        word_index = random.randint(0, len(word_list)-1)
         self.word = word_list[word_index]
         self.word_guessed = ['_'] * len(self.word)
         self.num_letters = len(set(self.word))
@@ -72,7 +72,52 @@ class Hangman:
         # TODO 3: If the letter is in the word, the number of UNIQUE letters in the word that have not been guessed yet has to be reduced by 1
         # TODO 3: If the letter is not in the word, reduce the number of lives by 1
         # Be careful! A letter can contain the same letter more than once. TIP: Take a look at the index() method in the string class
-        pass
+        
+        #convert letter inputted into lower case
+        letter = str.lower(letter)
+        self.list_letters.append(letter)
+        letter_count = self.word.count('lower_letter')
+
+        #replace the '_' in word_guessed list with the letter, use index() method from string class
+        if letter_count == 1:
+            letter_index = self.word.index(letter)
+            self.word_guessed[letter_index] = letter
+            
+            #reduce number of unique letters num_letters by one
+            self.num_letters -= 1
+
+            #print updates
+            print(f'Nice! {letter} is in the word!')
+            print(f'{self.word_guessed}')
+        
+        elif letter_count > 1:   
+            letter_indices = []
+
+            #find first occurance of letter
+            letter_index = self.word.index(letter)
+            letter_indices.append(letter_index)
+            count = 1
+
+            while count < letter_count:
+                letter_index = self.word.index(letter, letter_indices[-1]+1)
+                letter_indices.append(letter_index)
+                count += 1
+
+            for i in letter_indices:
+                self.word_guessed[i] = letter
+            
+            #reduce number of unique letters num_letters by one
+            self.num_letters -= 1
+
+            #print updates
+            print(f'Nice! {letter} is in the word!')
+            print(f'{self.word_guessed}')
+
+        else:
+            self.num_lives -= 1
+            print(f'Sorry, {letter} is not in the word.')
+            print(f'You have {self.num_lives} lives left.')
+
 
     def ask_letter(self):
         '''
@@ -85,20 +130,19 @@ class Hangman:
         # TODO 1: Assign the letter to a variable called `letter`
         # TODO 1: The letter has to comply with the following criteria: It has to be a single character. If it is not, print "Please, enter just one character"
         # TODO 2. It has to be a letter that has not been tried yet. Use the list_letters attribute to check this. If it has been tried, print "{letter} was already tried".
-
+        # TODO 3: If the letter is valid, call the check_letter method
+        
         while True:
             letter = input("Please enter a letter: ")
             if len(letter) != 1:
                 print("Please, enter just one character.")
                 continue
             elif letter in self.list_letters:
-                print("")
+                print(f"{letter} was already tried")
                 continue
             self.list_letters.append(letter)
+            self.check_letter(letter)
             break
-
-        # TODO 3: If the letter is valid, call the check_letter method
-        pass
 
 def play_game(word_list):
     # As an aid, part of the code is already provided:
@@ -111,7 +155,8 @@ def play_game(word_list):
     # this has been tested and is acting as expected.
     
     # TODO 3: To test this task, you call the ask_letter method and check if the letter is in the word
-    
+    game.ask_letter()
+
     # TODO 4: Iteratively ask the user for a letter until the user guesses the word or runs out of lives
     # If the user guesses the word, print "Congratulations! You won!"
     # If the user runs out of lives, print "You lost! The word was {word}"
