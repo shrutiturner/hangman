@@ -46,13 +46,13 @@ class Hangman:
         # 1. "The mistery word has {num_letters} characters"
         # 2. {word_guessed}
         word_index = random.randint(0, len(word_list)-1)
-        self.word = word_list[word_index]
+        self.word = str.lower(word_list[word_index])
         self.word_guessed = ['_'] * len(self.word)
         self.num_letters = len(set(self.word))
         self.num_lives = num_lives
         self.list_letters = []
 
-        print(f"The mistery word has {self.num_letters} characters")
+        print(f"The mistery word has {len(self.word)} characters")
         print(f"{self.word_guessed}")
 
     def check_letter(self, letter) -> None:
@@ -139,7 +139,7 @@ class Hangman:
             elif letter in self.list_letters:
                 print(f"{letter} was already tried")
                 continue
-            self.list_letters.append(letter)
+            self.list_letters.append(str.lower(letter))
             self.check_letter(letter)
             break
 
