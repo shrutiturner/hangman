@@ -46,13 +46,13 @@ class Hangman:
         # 1. "The mistery word has {num_letters} characters"
         # 2. {word_guessed}
         word_index = random.randint(0, len(word_list)-1)
-        self.word = str.lower(word_list[word_index])
+        self.word = word_list[word_index]
         self.word_guessed = ['_'] * len(self.word)
         self.num_letters = len(set(self.word))
         self.num_lives = num_lives
         self.list_letters = []
 
-        print(f"The mistery word has {len(self.word)} characters")
+        print(f"The mystery word has {len(self.word)} characters")
         print(f"{self.word_guessed}")
 
     def check_letter(self, letter) -> None:
@@ -73,13 +73,14 @@ class Hangman:
         # TODO 3: If the letter is not in the word, reduce the number of lives by 1
         # Be careful! A letter can contain the same letter more than once. TIP: Take a look at the index() method in the string class
         
-        #convert letter inputted into lower case
+        #convert letter inputted and original word into lower case
         letter = str.lower(letter)
-        letter_count = self.word.count(letter)
+        word_lower = str.lower(self.word)
+        letter_count = word_lower.count(letter)
 
         #replace the '_' in word_guessed list with the letter, use index() method from string class
         if letter_count == 1:
-            letter_index = self.word.index(letter)
+            letter_index = word_lower.index(letter)
             self.word_guessed[letter_index] = letter
             
             #reduce number of unique letters num_letters by one
@@ -93,12 +94,12 @@ class Hangman:
             letter_indices = []
 
             #find first occurance of letter
-            letter_index = self.word.index(letter)
+            letter_index = word_lower.index(letter)
             letter_indices.append(letter_index)
             count = 1
 
             while count < letter_count:
-                letter_index = self.word.index(letter, letter_indices[-1]+1)
+                letter_index = word_lower.index(letter, letter_indices[-1]+1)
                 letter_indices.append(letter_index)
                 count += 1
 
@@ -158,16 +159,16 @@ def play_game(word_list):
 
     # TODO 4: Iteratively ask the user for a letter until the user guesses the word or runs out of lives
     # If the user guesses the word, print "Congratulations! You won!"
-    # If the user runs out of lives, print "You lost! The word was {word}"
+    # If the user runs out of lives, print "You lost! The word was {word}" *discrepency with test wanting "You ran out of lives"
 
     while game.num_lives > 0 and game.word_guessed.count('_') > 0:
         game.ask_letter()
     
     if game.num_lives == 0:
-        print(f"You lost! The word was {game.word}")
+        print(f"You ran out of lives. The word was {game.word}")
 
     if game.word_guessed.count('_') == 0:
-        print("Congratulations! You won!")
+        print("Congratulations, you won!")
 
 if __name__ == '__main__':
     word_list = ['apple', 'banana', 'orange', 'pear', 'strawberry', 'watermelon']
