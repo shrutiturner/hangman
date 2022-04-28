@@ -135,7 +135,7 @@ class Hangman:
         while True:
             letter = input("Please enter a letter: ")
             if len(letter) != 1:
-                print("Please, enter just one character.")
+                print("Please, enter just one character")
                 continue
             elif letter in self.list_letters:
                 print(f"{letter} was already tried")
